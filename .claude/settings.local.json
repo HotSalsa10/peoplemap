@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npx supabase:*)",
+      "Bash(npm list:*)",
+      "Bash(npm install:*)",
+      "Bash(npm audit:*)",
+      "Bash(node:*)",
+      "Bash(echo '@import \"\"tailwindcss\"\";')",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(curl -s \"http://localhost:5176/src/db/types.ts\")",
+      "Bash(curl -s \"http://localhost:5176/src/App.tsx\")",
+      "Bash(curl -s \"http://localhost:5176/src/context/UIContext.tsx\")",
+      "Bash(npx vite:*)"
+    ]
+  }
+}
