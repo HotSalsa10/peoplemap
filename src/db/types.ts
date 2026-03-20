@@ -29,6 +29,7 @@ export interface GraphNode {
   tags: string[];
   color: string;
   val: number; // node size = relationship count
+  isMe?: boolean;
 }
 
 export interface GraphLink {
@@ -43,12 +44,21 @@ export interface GraphData {
   links: GraphLink[];
 }
 
+export interface ClusterData {
+  tag: string;
+  parentTag: string | null;
+  color: string;
+  lighterColor: string;
+  nodeIds: number[];
+}
+
 export type PanelMode =
   | 'empty'
   | 'view'
   | 'addPerson'
   | 'editPerson'
-  | 'addRelationship';
+  | 'addRelationship'
+  | 'settings';
 
 export interface UIState {
   selectedNodeId: number | null;
