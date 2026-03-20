@@ -5,6 +5,7 @@ import PersonDetail from '../panels/PersonDetail';
 import PersonForm from '../panels/PersonForm';
 import RelationshipForm from '../panels/RelationshipForm';
 import EmptyState from '../panels/EmptyState';
+import SettingsPanel from '../panels/SettingsPanel';
 
 const BottomSheet: React.FC = () => {
   const { bottomSheetOpen, panelMode, setBottomSheetOpen } = useUI();
@@ -28,6 +29,7 @@ const BottomSheet: React.FC = () => {
         {(panelMode === 'addPerson' || panelMode === 'editPerson') && <PersonForm />}
         {panelMode === 'addRelationship' && <RelationshipForm />}
         {panelMode === 'empty' && <EmptyState />}
+        {panelMode === 'settings' && <SettingsPanel />}
       </div>
     </div>
   );
