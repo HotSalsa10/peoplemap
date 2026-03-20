@@ -3,6 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../../db/database';
 import { useUI } from '../../context/UIContext';
 import usePersonActions from '../../hooks/usePersonActions';
+import { setMePersonId } from '../../db/settingsService';
 import TagBadge from '../ui/TagBadge';
 import Button from '../ui/Button';
 import type { Relationship } from '../../db/types';
@@ -22,6 +23,9 @@ const PersonDetail: React.FC = () => {
       : Promise.resolve([] as Relationship[]),
     [selectedNodeId]
   );
+
+  const meSetting = useLiveQuery(() => db.settings.get('mePersonId'));
+  const isMe = meSetting?.value === selectedNodeId;
 
   if (!person) {
     return null;
@@ -49,6 +53,12 @@ const PersonDetail: React.FC = () => {
           variant="secondary"
         >
           Add Connection
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={async () => { if (selectedNodeId) await setMePersonId(selectedNodeId); }}
+        >
+          {isMe ? 'You ✓' : 'Set as Me'}
         </Button>
         <Button
           onClick={async () => {
