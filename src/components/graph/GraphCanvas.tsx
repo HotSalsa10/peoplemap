@@ -4,16 +4,27 @@ import { useUI } from '../../context/UIContext';
 import useGraphData from '../../hooks/useGraphData';
 import paintNode from './NodeRenderer';
 import paintLink from './LinkRenderer';
+import { paintClusters } from './ClusterRenderer';
 import GraphControls from './GraphControls';
 import { GRAPH_CONFIG } from '../../utils/constants';
-import type { GraphNode } from '../../db/types';
 
 const GraphCanvas = () => {
   const graphRef = useRef<any>(null);
   const { setSelectedNodeId, setPanelMode, setBottomSheetOpen } = useUI();
-  const graphData = useGraphData();
+  const { nodes, links, clusters } = useGraphData();
 
-  const onNodeClick = useCallback((node: GraphNode) => {
+  const graphData = { nodes, links };
+
+  // Center on "me" node after engine settles
+  const onEngineStop = useCallback(() => {
+    const meNode = nodes.find(n => n.isMe);
+    if (meNode && graphRef.current) {
+      graphRef.current.centerAt((meNode as any).x, (meNode as any).y, 800);
+      graphRef.current.zoom(1.5, 800);
+    }
+  }, [nodes]);
+
+  const onNodeClick = useCallback((node: any) => {
     setSelectedNodeId(node.id);
     setPanelMode('view');
     setBottomSheetOpen(true);
@@ -25,6 +36,12 @@ const GraphCanvas = () => {
     setBottomSheetOpen(false);
   }, [setSelectedNodeId, setPanelMode, setBottomSheetOpen]);
 
+  const onRenderFramePre = useCallback((ctx: CanvasRenderingContext2D) => {
+    if (nodes.length > 0) {
+      paintClusters(clusters, nodes, ctx);
+    }
+  }, [clusters, nodes]);
+
   return (
     <div className="w-full h-full relative">
       <GraphControls graphRef={graphRef} />
@@ -35,6 +52,7 @@ const GraphCanvas = () => {
         nodeCanvasObjectMode={GRAPH_CONFIG.nodeCanvasObjectMode}
         linkCanvasObject={paintLink}
         linkCanvasObjectMode='replace'
+        onRenderFramePre={onRenderFramePre}
         warmupTicks={GRAPH_CONFIG.warmupTicks}
         cooldownTicks={GRAPH_CONFIG.cooldownTicks}
         d3AlphaDecay={GRAPH_CONFIG.d3AlphaDecay}
@@ -43,6 +61,7 @@ const GraphCanvas = () => {
         maxZoom={GRAPH_CONFIG.maxZoom}
         onNodeClick={onNodeClick}
         onBackgroundClick={onBackgroundClick}
+        onEngineStop={onEngineStop}
         backgroundColor='#030712'
       />
     </div>
