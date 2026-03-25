@@ -49,7 +49,7 @@ const PersonForm = () => {
   return (
     <div className="p-4 flex flex-col gap-3 overflow-y-auto flex-1">
       <h2>{isEdit ? 'Edit Person' : 'Add Person'}</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <Input
           label="Name"
           value={name}

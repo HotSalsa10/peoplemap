@@ -3,12 +3,12 @@ export default function paintNode(node: any, ctx: CanvasRenderingContext2D, glob
   const y: number = node.y;
   const radius = Math.sqrt(Math.max(0, node.val)) * 4 * (node.isMe ? 1.5 : 1);
 
-  // Glow halo
-  const gradient = ctx.createRadialGradient(x, y, radius * 0.5, x, y, radius * 2.5);
-  gradient.addColorStop(0, node.color + 'aa');
+  // Glow halo (tighter to reduce bleed between nearby nodes)
+  const gradient = ctx.createRadialGradient(x, y, radius * 0.5, x, y, radius * 1.8);
+  gradient.addColorStop(0, node.color + '99');
   gradient.addColorStop(1, node.color + '00');
   ctx.beginPath();
-  ctx.arc(x, y, radius * 2.5, 0, 2 * Math.PI);
+  ctx.arc(x, y, radius * 1.8, 0, 2 * Math.PI);
   ctx.fillStyle = gradient;
   ctx.fill();
 
@@ -27,7 +27,8 @@ export default function paintNode(node: any, ctx: CanvasRenderingContext2D, glob
   ctx.fillStyle = node.color;
   ctx.fill();
 
-  // Label — always visible
+  // Labels: always visible but hidden at very low zoom to avoid screen-space overlap
+  if (globalScale < 0.25) return;
   const label = node.nickname || node.name;
   const fontSize = Math.max(10, 13 / globalScale);
   ctx.font = `${fontSize}px Inter, Sans-Serif`;
