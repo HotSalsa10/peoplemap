@@ -2,7 +2,9 @@ import React from 'react';
 import { useUI } from '../../context/UIContext';
 
 const FAB: React.FC = () => {
-  const { setPanelMode, setBottomSheetOpen } = useUI();
+  const { setPanelMode, setBottomSheetOpen, bottomSheetOpen } = useUI();
+
+  if (bottomSheetOpen) return null;
 
   return (
     <button
